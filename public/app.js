@@ -25,11 +25,24 @@ $('#gameplay-toggle').addEventListener('click',()=>{gameplayPaused=!gameplayPaus
 $('#motion-toggle').textContent='RAIN: '+(moving?'ON':'OFF');$('#motion-toggle').setAttribute('aria-pressed',String(moving));$('#motion-toggle').addEventListener('click',()=>{moving=!moving;$('#motion-toggle').textContent='RAIN: '+(moving?'ON':'OFF');$('#motion-toggle').setAttribute('aria-pressed',String(moving));draw();});
 const rect=(x,y,w,h,color)=>{ctx.fillStyle=color;ctx.fillRect(Math.round(x),Math.round(y),w,h);};
 const poly=(points,color)=>{ctx.fillStyle=color;ctx.beginPath();points.forEach(([x,y],i)=>i?ctx.lineTo(x,y):ctx.moveTo(x,y));ctx.closePath();ctx.fill();};
-const glyphs={A:['010','101','111','101','101'],B:['110','101','110','101','110'],C:['011','100','100','100','011'],D:['110','101','101','101','110'],E:['111','100','110','100','111'],F:['111','100','110','100','100'],G:['011','100','101','101','011'],H:['101','101','111','101','101'],I:['111','010','010','010','111'],J:['001','001','001','101','010'],K:['101','101','110','101','101'],L:['100','100','100','100','111'],M:['101','111','111','101','101'],N:['101','111','111','111','101'],O:['010','101','101','101','010'],P:['110','101','110','100','100'],Q:['010','101','101','111','011'],R:['110','101','110','101','101'],S:['011','100','010','001','110'],T:['111','010','010','010','010'],U:['101','101','101','101','111'],V:['101','101','101','101','010'],W:['101','101','111','111','101'],X:['101','101','010','101','101'],Y:['101','101','010','010','010'],Z:['111','001','010','100','111']};
-function label(t,x,y,size,color){const s=size>=9?2:1,start=x-(t.length*4*s-s)/2;t.split('').forEach((ch,i)=>(glyphs[ch]||[]).forEach((row,dy)=>row.split('').forEach((bit,dx)=>{if(bit==='1')rect(start+i*4*s+dx*s,y-5*s+dy*s,s,s,color);})));}
 let seed=79;function rand(){seed=(seed*16807)%2147483647;return(seed-1)/2147483646;}
 const rain=Array.from({length:100},()=>({x:rand()*384,y:rand()*216,s:1+rand()*2}));
 function cactus(x,y,s,color){rect(x,y-15*s,2*s,15*s,color);rect(x-4*s,y-11*s,2*s,6*s,color);rect(x-4*s,y-7*s,6*s,2*s,color);rect(x+4*s,y-16*s,2*s,8*s,color);rect(x,y-10*s,6*s,2*s,color);}
+// Desktop sign placement in scene units (the canvas is 384 units wide). The sign starts just right of the
+// hero copy and shrinks if needed so it never sits under the text or runs into the shop (which starts at 211).
+// On narrow desktop/tablet widths where even a small sign won't fit beside the text, it is left out of the hero.
+let heroSign={x:140,y:43,w:49.92};
+function layoutHeroSign(){
+if(mobileScene.matches){heroSign={x:219,y:13,w:62.4};return;}
+const box=c.getBoundingClientRect(),unit=box.width/384;
+let textRight=0;
+document.querySelectorAll('.hero-copy > *').forEach(el=>{const range=document.createRange();range.selectNodeContents(el);textRight=Math.max(textRight,range.getBoundingClientRect().right);});
+const shopEdge=209,fullWidth=49.92,minWidth=30;
+let x=Math.max(140,(textRight-box.left)/unit+3),w=fullWidth;
+if(x+w>shopEdge)w=shopEdge-x;
+heroSign=w>=minWidth?{x,y:194-w*236/78,w}:null;
+}
+function drawHeroSign(){if(!heroSign)return;const neon=cactusFrames[cactusState];if(neon.complete&&neon.naturalWidth)ctx.drawImage(neon,heroSign.x,heroSign.y,heroSign.w,heroSign.w*236/78);}
 function scene(){
 ctx.setTransform(2,0,0,2,0,0);
 const mobile=mobileScene.matches;
@@ -41,14 +54,15 @@ poly([[0,118],[44,111],[61,117],[84,105],[102,112],[129,103],[153,116],[183,110]
 rect(11,115,62,45,'#1e242b');rect(13,111,58,5,'#393339');rect(19,126,12,17,'#0c131e');rect(46,127,15,12,'#53402d');rect(48,129,11,8,'#a36939');rect(53,129,1,8,'#3c3031');
 rect(92,119,36,41,'#222b33');rect(89,115,42,5,'#404047');rect(99,130,20,10,'#101826');rect(101,132,16,2,'#2d6168');
 cactus(82,157,1.3,'#0c1720');cactus(168,157,1.4,'#0c1720');cactus(370,160,1.8,'#0a121b');
-// The same fixed pixel artwork is used for every light state.
-const neon=cactusFrames[cactusState];
-if(neon.complete&&neon.naturalWidth){const width=mobile?62.4:49.92;ctx.drawImage(neon,mobile?219:140,mobile?13:43,width,width*236/78);}
+// The same fixed pixel artwork is used for every light state. On phones the sign stands behind the shop.
+if(mobile)drawHeroSign();
 // Pueblo Revival repair shop with a deep doorway, vigas and worn adobe stucco.
 if(storefront.complete&&storefront.naturalWidth){ctx.imageSmoothingEnabled=false;ctx.drawImage(storefront,211,mobile?185:51,158,115);}
 // Sodium lamp.
 rect(184,83,2,79,'#263341');rect(180,81,16,2,'#4e4c49');rect(191,83,9,2,'#dca66d');rect(193,85,5,2,'#ffe0a0');
 poly([[195,87],[164,164],[226,164]],'#342c2b');rect(184,86,2,76,'#2b3541');
+// On desktop the sign stands in front of the lamp, clear of the hero copy (see layoutHeroSign).
+if(!mobile)drawHeroSign();
 // Wet pavement, scattered neon reflections and curb stones.
 rect(0,mobile?294:160,384,mobile?26:56,'#101825');rect(0,160,384,3,'#38434c');rect(209,163,150,3,'#59606a');rect(213,166,143,2,'#1a2734');
 seed=615;for(let i=0;i<145;i++){let x=rand()*384,y=166+rand()*50,w=1+Math.floor(rand()*13);let col=x>245&&x<320?'#614335':x>322&&x<359?'#244d5b':'#263040';if(i%3===0)col='#152032';rect(x,y,w,1,col);}
@@ -73,9 +87,9 @@ new IntersectionObserver(entries=>{if(entries[0].isIntersecting)$('#mobile-cta')
 const neonSign=$('#tucson-neon'),neonCanvas=$('#neon-sign'),neonContext=neonCanvas.getContext('2d');
 neonContext.imageSmoothingEnabled=false;
 function drawPersistentCactus(){const image=cactusFrames[cactusState];if(!image.complete||!image.naturalWidth)return;neonContext.clearRect(0,0,78,236);neonContext.drawImage(image,0,0,78,236);}
-function positionNeon(){const mobile=mobileScene.matches;c.height=mobile?640:432;ctx.imageSmoothingEnabled=false;const hero=$('.hero').getBoundingClientRect();neonSign.classList.toggle('is-visible',hero.bottom<100);scene();}
+function positionNeon(){const mobile=mobileScene.matches;c.height=mobile?640:432;ctx.imageSmoothingEnabled=false;layoutHeroSign();const hero=$('.hero').getBoundingClientRect();neonSign.classList.toggle('is-visible',hero.bottom<100);scene();}
 window.addEventListener('scroll',()=>{neonSign.classList.toggle('is-visible',$('.hero').getBoundingClientRect().bottom<100);},{passive:true});
-window.addEventListener('resize',positionNeon);positionNeon();
+window.addEventListener('resize',positionNeon);positionNeon();if(document.fonts)document.fonts.ready.then(positionNeon);
 let neonTimer,neonFlashTimer;
 function setCactusState(state){cactusState=state;drawPersistentCactus();scene();}
 function scheduleNeon(){clearTimeout(neonTimer);if(reduced||document.hidden)return;neonTimer=setTimeout(()=>{setCactusState(Math.random()<.7?1:2);neonFlashTimer=setTimeout(()=>{setCactusState(0);scheduleNeon();},70+Math.random()*70);},4500+Math.random()*11000);}
@@ -83,7 +97,6 @@ document.addEventListener('visibilitychange',()=>{clearTimeout(neonFlashTimer);s
 matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change',e=>{reduced=e.matches;moving=!reduced;$('#motion-toggle').textContent='RAIN: '+(moving?'ON':'OFF');$('#motion-toggle').setAttribute('aria-pressed',String(moving));clearTimeout(neonFlashTimer);setCactusState(0);scheduleNeon();if(!frame&&!reduced)frame=requestAnimationFrame(tick);});
 scheduleNeon();
 
-// Size embedded public project windows to their frames without changing the originals.
-function fitProjects(){document.querySelectorAll('.project-frame iframe').forEach(f=>{let width=f.classList.contains('portrait')?960:1200;f.style.transform='scale('+(f.parentElement.clientWidth/width)+')';});}window.addEventListener('resize',fitProjects);fitProjects();scene();if(!reduced)frame=requestAnimationFrame(tick);
+scene();if(!reduced)frame=requestAnimationFrame(tick);
 })();
 

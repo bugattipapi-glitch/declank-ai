@@ -24,7 +24,17 @@
 @media(min-width:768px){.section>.wrap{width:min(1120px,calc(100% - 128px))}}
 @media(max-width:1000px){.brand-name{font-size:21px;width:150px;min-width:0}.brand-name span{font-size:20px;letter-spacing:6px}.nav{gap:16px}.nav-links{gap:14px}}
 @media(max-width:767px){.brand-name{font-size:20px;width:145px;min-width:0;letter-spacing:1px}.brand-name span{font-size:19px;letter-spacing:6px}.wordmark{gap:8px}.tucson-neon{filter:none}}
-@media(prefers-reduced-motion:reduce){.tucson-neon.is-flickering .neon-lights{opacity:1;filter:none}}
 
 
 @media(max-width:767px){.scene{height:640px}.hero{min-height:0}.hero .wrap{padding-top:610px}.hero:after{background:linear-gradient(0deg,#0a0d16 0%,#0a0d16 48%,transparent 66%)}.scene-label{top:552px}.tucson-neon{width:124.8px;height:377.6px;left:auto;right:-24px;bottom:70px}.tucson-neon.is-visible{opacity:.14}}
+
+/* Pixelify Sans merges "fi" into a single glyph that reads as "A" ("fix" showed as "Ax"). Turn ligatures off wherever it is used. */
+h1,h2,h3,.bay-number,.strategy-note strong,.experience b,.placeholder .play,.placeholder strong,.project-fallback b,.footer-grid strong{font-variant-ligatures:none;font-feature-settings:"liga" 0}
+
+/* The hero's bottom strip also carries the .wrap class, so it was picking up the hero copy's large padding and riding up into the text above. */
+.hero .wrap.hero-bottom{padding-top:0;padding-bottom:0}
+
+/* Keep the scrolling Tucson sign behind the content: content columns get their section's solid colour,
+   so the sign only shows in the empty margins and gaps between sections. */
+#how,#rules,footer{background:var(--night)}
+.section>.wrap,.signal-line .wrap,footer .wrap,.final-cta>:not(.btn){background:inherit}
