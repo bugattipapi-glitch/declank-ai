@@ -18,6 +18,7 @@ const cactusFrames=['tucson-cactus','tucson-cactus-tubes-dim','tucson-cactus-bul
 let cactusState=0;
 const storefront=new Image();storefront.src="/assets/pueblo-storefront.gif";storefront.onload=()=>scene();
 const sprite=new Image();sprite.src="/assets/replicant-states.gif"; sprite.onload=()=>scene();
+const streetlight=new Image();streetlight.src="/assets/streetlight.png";streetlight.onload=()=>scene();
 const gameShot=$('#veyrakk-shot'),gameGif=gameShot.src,gameStill="/assets/veyrakk-still.gif";let gameplayPaused=reduced;
 if(reduced){gameShot.src=gameStill;$('#gameplay-toggle').textContent='Play gameplay';$('#gameplay-toggle').setAttribute('aria-pressed','true');}
 $('#gameplay-toggle').addEventListener('click',()=>{gameplayPaused=!gameplayPaused;gameShot.src=gameplayPaused?gameStill:gameGif;$('#gameplay-toggle').textContent=gameplayPaused?'Play gameplay':'Pause gameplay';$('#gameplay-toggle').setAttribute('aria-pressed',String(gameplayPaused));});
@@ -28,8 +29,13 @@ const poly=(points,color)=>{ctx.fillStyle=color;ctx.beginPath();points.forEach((
 let seed=79;function rand(){seed=(seed*16807)%2147483647;return(seed-1)/2147483646;}
 const rain=Array.from({length:100},()=>({x:rand()*384,y:rand()*216,s:1+rand()*2}));
 function cactus(x,y,s,color){rect(x,y-15*s,2*s,15*s,color);rect(x-4*s,y-11*s,2*s,6*s,color);rect(x-4*s,y-7*s,6*s,2*s,color);rect(x+4*s,y-16*s,2*s,8*s,color);rect(x,y-10*s,6*s,2*s,color);}
+const STREETLIGHT={x:171,desktopY:72,mobileY:206,sourceWidth:99,sourceHeight:256,drawHeight:96,bulbX:67.47,bulbY:42.07};
+function streetlightLayout(mobile){
+const scale=STREETLIGHT.drawHeight/STREETLIGHT.sourceHeight;
+return{x:STREETLIGHT.x,y:mobile?STREETLIGHT.mobileY:STREETLIGHT.desktopY,w:STREETLIGHT.sourceWidth*scale,h:STREETLIGHT.drawHeight,bulbX:STREETLIGHT.x+STREETLIGHT.bulbX*scale,bulbY:(mobile?STREETLIGHT.mobileY:STREETLIGHT.desktopY)+STREETLIGHT.bulbY*scale};
+}
 function drawStreetLightBeam(mobile){
-const yOffset=mobile?134:0,bulbX=198,bulbY=88+yOffset,groundY=mobile?296:164;
+const light=streetlightLayout(mobile),bulbX=light.bulbX,bulbY=light.bulbY,groundY=mobile?296:164;
 // Transparent, hard-edged bands preserve the pixel-art look while the scene remains visible beneath them.
 poly([[bulbX-4,bulbY],[bulbX-34,groundY],[bulbX+70,groundY]],'rgba(255,184,92,.035)');
 poly([[bulbX-3,bulbY],[bulbX-23,groundY],[bulbX+53,groundY]],'rgba(255,196,112,.045)');
@@ -42,35 +48,11 @@ if((x+y)%3===0)rect(x,y,2,1,'rgba(255,210,132,.055)');
 }
 }
 }
-function drawStreetLightFixture(mobile){
-const o=mobile?134:0;
-// Cast-iron pole with a wet highlight, stepped base plates and mounting bolts.
-rect(183,88+o,6,76,'#111923');
-rect(184,88+o,4,76,'#293746');
-rect(185,88+o,1,76,'#65717a');
-rect(188,91+o,1,70,'#0b1119');
-rect(180,160+o,12,4,'#121a24');
-rect(178,164+o,16,3,'#26313c');
-rect(181,158+o,10,2,'#49535b');
-rect(180,165+o,2,1,'#778087');
-rect(190,165+o,2,1,'#090e15');
-// Stepped gooseneck and rear counterweight.
-rect(184,82+o,5,8,'#293743');
-rect(185,79+o,5,5,'#43515a');
-rect(188,77+o,5,4,'#56616a');
-rect(191,76+o,7,3,'#657078');
-rect(180,80+o,5,3,'#202b36');
-rect(179,81+o,3,2,'#6a7072');
-// Beveled hood, warm glass and a two-pixel filament.
-rect(195,78+o,12,2,'#222b34');
-rect(193,80+o,16,3,'#46515a');
-rect(195,83+o,13,3,'#171e25');
-rect(197,86+o,10,3,'#a96737');
-rect(198,87+o,8,2,'#e2a058');
-rect(200,88+o,4,2,'#ffe2a0');
-rect(201,88+o,2,1,'#fff4cc');
-rect(207,82+o,2,5,'#0b1017');
-rect(194,83+o,2,3,'#758087');
+function drawStreetLight(mobile){
+if(!streetlight.complete||!streetlight.naturalWidth)return;
+const light=streetlightLayout(mobile);
+ctx.imageSmoothingEnabled=false;
+ctx.drawImage(streetlight,light.x,light.y,light.w,light.h);
 }
 // Desktop sign placement in scene units (the canvas is 384 units wide). The sign starts just right of the
 // hero copy and shrinks if needed so it never sits under the text or runs into the shop (which starts at 211).
@@ -114,7 +96,7 @@ if(human>0){ctx.globalAlpha=human;ctx.drawImage(sprite,half,0,half,sprite.natura
 }
 // The translucent light pass sits above the shop and character. The solid fixture remains crisp on top.
 drawStreetLightBeam(mobile);
-drawStreetLightFixture(mobile);
+drawStreetLight(mobile);
 // On desktop the cactus remains in front of the streetlight, clear of the hero copy.
 if(!mobile)drawHeroSign();
 // Pixel rain: low contrast and no flashes.
