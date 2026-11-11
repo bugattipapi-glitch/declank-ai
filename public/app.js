@@ -28,6 +28,50 @@ const poly=(points,color)=>{ctx.fillStyle=color;ctx.beginPath();points.forEach((
 let seed=79;function rand(){seed=(seed*16807)%2147483647;return(seed-1)/2147483646;}
 const rain=Array.from({length:100},()=>({x:rand()*384,y:rand()*216,s:1+rand()*2}));
 function cactus(x,y,s,color){rect(x,y-15*s,2*s,15*s,color);rect(x-4*s,y-11*s,2*s,6*s,color);rect(x-4*s,y-7*s,6*s,2*s,color);rect(x+4*s,y-16*s,2*s,8*s,color);rect(x,y-10*s,6*s,2*s,color);}
+function drawStreetLightBeam(mobile){
+const yOffset=mobile?134:0,bulbX=198,bulbY=88+yOffset,groundY=mobile?296:164;
+// Transparent, hard-edged bands preserve the pixel-art look while the scene remains visible beneath them.
+poly([[bulbX-4,bulbY],[bulbX-34,groundY],[bulbX+70,groundY]],'rgba(255,184,92,.035)');
+poly([[bulbX-3,bulbY],[bulbX-23,groundY],[bulbX+53,groundY]],'rgba(255,196,112,.045)');
+poly([[bulbX-2,bulbY],[bulbX-11,groundY],[bulbX+36,groundY]],'rgba(255,219,149,.055)');
+// Sparse square highlights mimic a late-SNES transparency pass.
+for(let y=bulbY+9;y<groundY;y+=7){
+const spread=(y-bulbY)/(groundY-bulbY);
+for(let x=Math.ceil(bulbX-spread*28);x<=bulbX+spread*58;x+=6){
+if((x+y)%3===0)rect(x,y,2,1,'rgba(255,210,132,.055)');
+}
+}
+}
+function drawStreetLightFixture(mobile){
+const o=mobile?134:0;
+// Cast-iron pole with a wet highlight, stepped base plates and mounting bolts.
+rect(183,88+o,6,76,'#111923');
+rect(184,88+o,4,76,'#293746');
+rect(185,88+o,1,76,'#65717a');
+rect(188,91+o,1,70,'#0b1119');
+rect(180,160+o,12,4,'#121a24');
+rect(178,164+o,16,3,'#26313c');
+rect(181,158+o,10,2,'#49535b');
+rect(180,165+o,2,1,'#778087');
+rect(190,165+o,2,1,'#090e15');
+// Stepped gooseneck and rear counterweight.
+rect(184,82+o,5,8,'#293743');
+rect(185,79+o,5,5,'#43515a');
+rect(188,77+o,5,4,'#56616a');
+rect(191,76+o,7,3,'#657078');
+rect(180,80+o,5,3,'#202b36');
+rect(179,81+o,3,2,'#6a7072');
+// Beveled hood, warm glass and a two-pixel filament.
+rect(195,78+o,12,2,'#222b34');
+rect(193,80+o,16,3,'#46515a');
+rect(195,83+o,13,3,'#171e25');
+rect(197,86+o,10,3,'#a96737');
+rect(198,87+o,8,2,'#e2a058');
+rect(200,88+o,4,2,'#ffe2a0');
+rect(201,88+o,2,1,'#fff4cc');
+rect(207,82+o,2,5,'#0b1017');
+rect(194,83+o,2,3,'#758087');
+}
 // Desktop sign placement in scene units (the canvas is 384 units wide). The sign starts just right of the
 // hero copy and shrinks if needed so it never sits under the text or runs into the shop (which starts at 211).
 // On narrow desktop/tablet widths where even a small sign won't fit beside the text, it is left out of the hero.
@@ -58,11 +102,6 @@ cactus(82,157,1.3,'#0c1720');cactus(168,157,1.4,'#0c1720');cactus(370,160,1.8,'#
 if(mobile)drawHeroSign();
 // Pueblo Revival repair shop with a deep doorway, vigas and worn adobe stucco.
 if(storefront.complete&&storefront.naturalWidth){ctx.imageSmoothingEnabled=false;ctx.drawImage(storefront,211,mobile?185:51,158,115);}
-// Sodium lamp.
-rect(184,83,2,79,'#263341');rect(180,81,16,2,'#4e4c49');rect(191,83,9,2,'#dca66d');rect(193,85,5,2,'#ffe0a0');
-poly([[195,87],[164,164],[226,164]],'#342c2b');rect(184,86,2,76,'#2b3541');
-// On desktop the sign stands in front of the lamp, clear of the hero copy (see layoutHeroSign).
-if(!mobile)drawHeroSign();
 // Wet pavement, scattered neon reflections and curb stones.
 rect(0,mobile?294:160,384,mobile?26:56,'#101825');rect(0,160,384,3,'#38434c');rect(209,163,150,3,'#59606a');rect(213,166,143,2,'#1a2734');
 seed=615;for(let i=0;i<145;i++){let x=rand()*384,y=166+rand()*50,w=1+Math.floor(rand()*13);let col=x>245&&x<320?'#614335':x>322&&x<359?'#244d5b':'#263040';if(i%3===0)col='#152032';rect(x,y,w,1,col);}
@@ -73,6 +112,11 @@ ctx.imageSmoothingEnabled=false;let half=sprite.naturalWidth/2;
 ctx.globalAlpha=1-human;ctx.drawImage(sprite,0,0,half,sprite.naturalHeight,247,mobile?240:100,59,108);
 if(human>0){ctx.globalAlpha=human;ctx.drawImage(sprite,half,0,half,sprite.naturalHeight,247,mobile?240:100,59,108);}ctx.globalAlpha=1;
 }
+// The translucent light pass sits above the shop and character. The solid fixture remains crisp on top.
+drawStreetLightBeam(mobile);
+drawStreetLightFixture(mobile);
+// On desktop the cactus remains in front of the streetlight, clear of the hero copy.
+if(!mobile)drawHeroSign();
 // Pixel rain: low contrast and no flashes.
 rain.forEach((r,i)=>{let y=(r.y+(moving?clock*r.s/120:0))%216;rect(r.x,y,1,i%3===0?4:2,i%4===0?'#63778466':'#41566755');});
 }
@@ -99,4 +143,5 @@ scheduleNeon();
 
 scene();if(!reduced)frame=requestAnimationFrame(tick);
 })();
+
 
