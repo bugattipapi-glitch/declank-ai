@@ -18,6 +18,7 @@ const cactusFrames=['tucson-cactus','tucson-cactus-tubes-dim','tucson-cactus-bul
 let cactusState=0;
 const storefront=new Image();storefront.src="/assets/pueblo-storefront.gif";storefront.onload=()=>scene();
 const sprite=new Image();sprite.src="/assets/replicant-states.gif"; sprite.onload=()=>scene();
+const streetlight=new Image();streetlight.src="/assets/streetlight.png";streetlight.onload=()=>scene();
 const gameShot=$('#veyrakk-shot'),gameGif=gameShot.src,gameStill="/assets/veyrakk-still.gif";let gameplayPaused=reduced;
 if(reduced){gameShot.src=gameStill;$('#gameplay-toggle').textContent='Play gameplay';$('#gameplay-toggle').setAttribute('aria-pressed','true');}
 $('#gameplay-toggle').addEventListener('click',()=>{gameplayPaused=!gameplayPaused;gameShot.src=gameplayPaused?gameStill:gameGif;$('#gameplay-toggle').textContent=gameplayPaused?'Play gameplay':'Pause gameplay';$('#gameplay-toggle').setAttribute('aria-pressed',String(gameplayPaused));});
@@ -28,6 +29,31 @@ const poly=(points,color)=>{ctx.fillStyle=color;ctx.beginPath();points.forEach((
 let seed=79;function rand(){seed=(seed*16807)%2147483647;return(seed-1)/2147483646;}
 const rain=Array.from({length:100},()=>({x:rand()*384,y:rand()*216,s:1+rand()*2}));
 function cactus(x,y,s,color){rect(x,y-15*s,2*s,15*s,color);rect(x-4*s,y-11*s,2*s,6*s,color);rect(x-4*s,y-7*s,6*s,2*s,color);rect(x+4*s,y-16*s,2*s,8*s,color);rect(x,y-10*s,6*s,2*s,color);}
+const STREETLIGHT={x:171,desktopY:72,mobileY:206,sourceWidth:99,sourceHeight:256,drawHeight:96,bulbX:67.47,bulbY:42.07};
+function streetlightLayout(mobile){
+const scale=STREETLIGHT.drawHeight/STREETLIGHT.sourceHeight;
+return{x:STREETLIGHT.x,y:mobile?STREETLIGHT.mobileY:STREETLIGHT.desktopY,w:STREETLIGHT.sourceWidth*scale,h:STREETLIGHT.drawHeight,bulbX:STREETLIGHT.x+STREETLIGHT.bulbX*scale,bulbY:(mobile?STREETLIGHT.mobileY:STREETLIGHT.desktopY)+STREETLIGHT.bulbY*scale};
+}
+function drawStreetLightBeam(mobile){
+const light=streetlightLayout(mobile),bulbX=light.bulbX,bulbY=light.bulbY,groundY=mobile?296:164;
+// Transparent, hard-edged bands preserve the pixel-art look while the scene remains visible beneath them.
+poly([[bulbX-4,bulbY],[bulbX-34,groundY],[bulbX+70,groundY]],'rgba(255,184,92,.035)');
+poly([[bulbX-3,bulbY],[bulbX-23,groundY],[bulbX+53,groundY]],'rgba(255,196,112,.045)');
+poly([[bulbX-2,bulbY],[bulbX-11,groundY],[bulbX+36,groundY]],'rgba(255,219,149,.055)');
+// Sparse square highlights mimic a late-SNES transparency pass.
+for(let y=bulbY+9;y<groundY;y+=7){
+const spread=(y-bulbY)/(groundY-bulbY);
+for(let x=Math.ceil(bulbX-spread*28);x<=bulbX+spread*58;x+=6){
+if((x+y)%3===0)rect(x,y,2,1,'rgba(255,210,132,.055)');
+}
+}
+}
+function drawStreetLight(mobile){
+if(!streetlight.complete||!streetlight.naturalWidth)return;
+const light=streetlightLayout(mobile);
+ctx.imageSmoothingEnabled=false;
+ctx.drawImage(streetlight,light.x,light.y,light.w,light.h);
+}
 // Desktop sign placement in scene units (the canvas is 384 units wide). The sign starts just right of the
 // hero copy and shrinks if needed so it never sits under the text or runs into the shop (which starts at 211).
 // On narrow desktop/tablet widths where even a small sign won't fit beside the text, it is left out of the hero.
@@ -58,11 +84,6 @@ cactus(82,157,1.3,'#0c1720');cactus(168,157,1.4,'#0c1720');cactus(370,160,1.8,'#
 if(mobile)drawHeroSign();
 // Pueblo Revival repair shop with a deep doorway, vigas and worn adobe stucco.
 if(storefront.complete&&storefront.naturalWidth){ctx.imageSmoothingEnabled=false;ctx.drawImage(storefront,211,mobile?185:51,158,115);}
-// Sodium lamp.
-rect(184,83,2,79,'#263341');rect(180,81,16,2,'#4e4c49');rect(191,83,9,2,'#dca66d');rect(193,85,5,2,'#ffe0a0');
-poly([[195,87],[164,164],[226,164]],'#342c2b');rect(184,86,2,76,'#2b3541');
-// On desktop the sign stands in front of the lamp, clear of the hero copy (see layoutHeroSign).
-if(!mobile)drawHeroSign();
 // Wet pavement, scattered neon reflections and curb stones.
 rect(0,mobile?294:160,384,mobile?26:56,'#101825');rect(0,160,384,3,'#38434c');rect(209,163,150,3,'#59606a');rect(213,166,143,2,'#1a2734');
 seed=615;for(let i=0;i<145;i++){let x=rand()*384,y=166+rand()*50,w=1+Math.floor(rand()*13);let col=x>245&&x<320?'#614335':x>322&&x<359?'#244d5b':'#263040';if(i%3===0)col='#152032';rect(x,y,w,1,col);}
@@ -73,6 +94,11 @@ ctx.imageSmoothingEnabled=false;let half=sprite.naturalWidth/2;
 ctx.globalAlpha=1-human;ctx.drawImage(sprite,0,0,half,sprite.naturalHeight,247,mobile?240:100,59,108);
 if(human>0){ctx.globalAlpha=human;ctx.drawImage(sprite,half,0,half,sprite.naturalHeight,247,mobile?240:100,59,108);}ctx.globalAlpha=1;
 }
+// The translucent light pass sits above the shop and character. The solid fixture remains crisp on top.
+drawStreetLightBeam(mobile);
+drawStreetLight(mobile);
+// On desktop the cactus remains in front of the streetlight, clear of the hero copy.
+if(!mobile)drawHeroSign();
 // Pixel rain: low contrast and no flashes.
 rain.forEach((r,i)=>{let y=(r.y+(moving?clock*r.s/120:0))%216;rect(r.x,y,1,i%3===0?4:2,i%4===0?'#63778466':'#41566755');});
 }
@@ -99,4 +125,5 @@ scheduleNeon();
 
 scene();if(!reduced)frame=requestAnimationFrame(tick);
 })();
+
 
