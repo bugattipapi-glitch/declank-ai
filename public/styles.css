@@ -38,3 +38,104 @@ h1,h2,h3,.bay-number,.strategy-note strong,.experience b,.placeholder .play,.pla
    so the sign only shows in the empty margins and gaps between sections. */
 #how,#rules,footer{background:var(--night)}
 .section>.wrap,.signal-line .wrap,footer .wrap,.final-cta>:not(.btn){background:inherit}
+
+/* ---- Broader positioning: any-business section, before/after, Game Plan, sample scorecard, three-up workbench ---- */
+.bridge{background:#111721}
+.bridge-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:70px;align-items:start}
+.bridge h2{margin-bottom:30px}
+.bridge .lead{margin-bottom:0}
+.bridge p{color:#bec4ce;max-width:600px}
+.bridge .lead{font-size:21px;color:var(--ink);line-height:1.55}
+.trades{display:flex;flex-wrap:wrap;gap:8px 28px;margin:48px 0 0;padding:22px 0 0;border-top:1px solid #34404e;list-style:none;font:20px var(--terminal);letter-spacing:1px;color:var(--muted);text-transform:uppercase}
+.trades li:before{content:'+';color:var(--orange);margin-right:10px}
+.trades li:last-child{color:var(--cyan)}
+
+.swap-head{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;margin:64px 0 24px}
+.swap-head h3{font-size:34px;margin:0}
+.swap-head p{font-size:14px;color:var(--muted);margin:0}
+.swaps{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.swap{border:1px solid var(--line);background:#0b101a;display:flex;flex-direction:column}
+.swap-where{font:17px var(--terminal);letter-spacing:1px;color:var(--cyan);padding:9px 18px;border-bottom:1px solid var(--line);text-transform:uppercase}
+.swap p{margin:0;padding:18px;font-size:15px;line-height:1.55}
+.swap b{display:block;font:400 16px var(--terminal);letter-spacing:1px;margin-bottom:6px}
+.swap .before{color:#8f98aa;border-bottom:1px dashed #465260}
+.swap .after{color:var(--ink);border-left:3px solid var(--orange);background:#151923;flex:1}
+.swap .after b{color:var(--orange)}
+
+.plan{display:grid;grid-template-columns:auto 1fr auto;gap:34px;align-items:center;border:1px solid #a76838;background:#1b1716;padding:24px 28px;margin-bottom:22px}
+.plan .mono{color:var(--orange);font-size:18px;display:block;margin-bottom:6px}
+.plan h3{font-size:30px;margin:0;white-space:nowrap}
+.plan p{font-size:15px;color:#c9c4bd;margin:0;max-width:540px}
+.plan-price{text-align:right}
+.plan-price .price{display:block;font-size:17px;font-weight:500;margin-bottom:8px}
+.plan-price .text-link{font-size:15px;white-space:nowrap}
+
+.projects.three{grid-template-columns:repeat(3,1fr);gap:22px}
+.projects.three .project-frame{height:215px}
+.projects.three .project-caption{padding:20px}
+.projects.three .project-caption h3{font-size:24px}
+.projects.three .project-caption .eyebrow{font-size:16px}
+.also-built{margin:26px 0 0;font-size:15px;color:var(--muted);max-width:none}
+
+.sample{display:grid;grid-template-columns:.8fr 1.2fr;gap:70px;align-items:center;margin-top:64px;padding-top:56px;border-top:1px solid #202a38}
+.sample .mono{color:var(--orange);font-size:19px}
+.sample-copy h3{font-size:34px;margin:14px 0}
+.sample-copy p{color:var(--muted);font-size:16px;max-width:380px}
+.scorecard{background:#dfd7c6;color:#1a2430;padding:30px 32px;box-shadow:8px 8px 0 #080e19;transform:rotate(1deg);max-width:560px;justify-self:end}
+.scorecard .mono{font-size:18px;color:#2f4148;display:block}
+.scorecard-title{font:38px/1.05 var(--terminal);display:block;padding:8px 0 14px;border-bottom:1px dashed #686d6e}
+.scores{list-style:none;margin:14px 0 16px;padding:0 0 12px;border-bottom:1px dashed #686d6e}
+.scores li{display:flex;justify-content:space-between;align-items:center;font-size:15px;padding:5px 0}
+.meter{display:flex;gap:4px}
+.meter i{width:14px;height:14px;border:2px solid #1a2430}
+.meter i.on{background:#1a2430}
+.fixes{margin:0;padding-left:20px;font-size:14.5px;line-height:1.5}
+.fixes li{margin-bottom:9px}
+.scorecard small{font:17px var(--terminal);display:block;margin-top:14px;color:#4a5560}
+
+.checks input[type=radio]{width:16px;height:16px;min-height:0;padding:0}
+fieldset.choice{margin:0 0 26px}
+.optional{font-weight:400;color:var(--muted)}
+
+@media(max-width:1000px){
+.bridge-grid{gap:40px}
+.swaps{gap:12px}
+.plan{grid-template-columns:1fr auto;gap:16px 24px}
+.plan p{grid-column:1/-1;grid-row:2;max-width:none}
+.projects.three{grid-template-columns:1fr 1fr;gap:16px}
+.sample{gap:40px}
+}
+@media(max-width:767px){
+.bridge-grid{grid-template-columns:1fr;gap:20px}
+.bridge h2{margin-bottom:22px}
+.bridge .lead{font-size:19px}
+.trades{font-size:17px;gap:6px 18px;margin-top:34px}
+.swap-head{display:block;margin:44px 0 20px}
+.swap-head h3{font-size:28px}
+.swap-head p{margin-top:10px}
+.swaps{grid-template-columns:1fr;gap:16px}
+.plan{display:block;padding:20px}
+.plan h3{white-space:normal;margin-bottom:12px}
+.plan-price{text-align:left;margin-top:16px}
+.projects.three{grid-template-columns:1fr;gap:24px}
+.projects.three .project-frame{height:230px}
+.projects.three .project-caption h3{font-size:26px}
+.sample{grid-template-columns:1fr;gap:26px;margin-top:44px;padding-top:40px}
+.sample-copy p{max-width:none}
+.scorecard{transform:none;padding:22px;justify-self:stretch;max-width:none}
+.scorecard-title{font-size:30px}
+
+/* Phone hero: the headline and button come first, and the shop scene sits underneath them. */
+.hero{display:block}
+.hero .wrap{padding-top:30px;padding-bottom:640px}
+.hero .wrap.hero-bottom{padding-top:0;padding-bottom:0}
+.scene{top:auto;bottom:0}
+.hero:after{background:linear-gradient(180deg,#0a0d16 0,#0a0d16 calc(100% - 640px),transparent calc(100% - 560px))}
+.scene-label{top:auto;bottom:58px}
+}
+@media(max-width:767px){
+/* Phones: before/after cards and workbench projects swipe sideways so the page stays shorter. */
+.swaps,.projects.three{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:14px;margin-right:-18px;padding-right:18px;scrollbar-width:none}
+.swaps::-webkit-scrollbar,.projects.three::-webkit-scrollbar{display:none}
+.swaps>*,.projects.three>*{flex:0 0 86%;scroll-snap-align:start}
+}
