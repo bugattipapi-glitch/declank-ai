@@ -29,13 +29,13 @@ const poly=(points,color)=>{ctx.fillStyle=color;ctx.beginPath();points.forEach((
 let seed=79;function rand(){seed=(seed*16807)%2147483647;return(seed-1)/2147483646;}
 const rain=Array.from({length:100},()=>({x:rand()*384,y:rand()*216,s:1+rand()*2}));
 function cactus(x,y,s,color){rect(x,y-15*s,2*s,15*s,color);rect(x-4*s,y-11*s,2*s,6*s,color);rect(x-4*s,y-7*s,6*s,2*s,color);rect(x+4*s,y-16*s,2*s,8*s,color);rect(x,y-10*s,6*s,2*s,color);}
-const STREETLIGHT={x:171,desktopY:72,mobileY:206,sourceWidth:99,sourceHeight:256,drawHeight:96,bulbX:67.47,bulbY:42.07};
+const STREETLIGHT={x:171,desktopY:72,mobileY:206,sourceWidth:99,sourceHeight:256,drawHeight:96,bulbX:67.47,bulbY:42.07,beamOffsetX:2.5};
 function streetlightLayout(mobile){
 const scale=STREETLIGHT.drawHeight/STREETLIGHT.sourceHeight;
 return{x:STREETLIGHT.x,y:mobile?STREETLIGHT.mobileY:STREETLIGHT.desktopY,w:STREETLIGHT.sourceWidth*scale,h:STREETLIGHT.drawHeight,bulbX:STREETLIGHT.x+STREETLIGHT.bulbX*scale,bulbY:(mobile?STREETLIGHT.mobileY:STREETLIGHT.desktopY)+STREETLIGHT.bulbY*scale};
 }
 function drawStreetLightBeam(mobile){
-const light=streetlightLayout(mobile),bulbX=light.bulbX,bulbY=light.bulbY,groundY=mobile?296:164;
+const light=streetlightLayout(mobile),bulbX=light.bulbX+STREETLIGHT.beamOffsetX,bulbY=light.bulbY,groundY=mobile?296:164;
 // Transparent, hard-edged bands preserve the pixel-art look while the scene remains visible beneath them.
 poly([[bulbX-4,bulbY],[bulbX-34,groundY],[bulbX+70,groundY]],'rgba(255,184,92,.035)');
 poly([[bulbX-3,bulbY],[bulbX-23,groundY],[bulbX+53,groundY]],'rgba(255,196,112,.045)');
@@ -125,5 +125,6 @@ scheduleNeon();
 
 scene();if(!reduced)frame=requestAnimationFrame(tick);
 })();
+
 
 
