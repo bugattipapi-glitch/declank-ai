@@ -67,14 +67,15 @@ for(let i=0;i<d.length;i+=4){if(d[i+3]&&d[i]>120&&d[i+1]>60&&(d[i]>d[i+2]+30||d[
 x2.putImageData(img,48,40);lampOff=k;}catch(e){lampOff=null;}
 }
 // The man under the lamp. Lit, he looks human. In the dark he dims and only the replicant's eyes stay bright.
-const FIGURE={w:59,h:108,desktopY:100,mobileY:240,eyes:[[84,59,9,7],[108,59,9,7]]};
+// The replicant pose sits 5px further right in the sprite sheet than the human pose; darkOffset lines the two up so he doesn't jump when the lamp flickers.
+const FIGURE={w:59,h:108,desktopY:100,mobileY:240,darkOffset:5,eyes:[[84,59,9,7],[108,59,9,7]]};
 let figureLit=null,figureDark=null;
 function buildFigures(){
 const half=sprite.naturalWidth/2,h=sprite.naturalHeight;
 figureLit=offscreen(half,h);figureLit.getContext('2d').drawImage(sprite,half,0,half,h,0,0,half,h);
-const k=offscreen(half,h),x2=k.getContext('2d');x2.drawImage(sprite,0,0,half,h,0,0,half,h);
+const off=FIGURE.darkOffset,k=offscreen(half,h),x2=k.getContext('2d');x2.drawImage(sprite,off,0,half-off,h,0,0,half-off,h);
 try{const img=x2.getImageData(0,0,half,h),d=img.data,glow=[];
-const isEye=(x,y)=>FIGURE.eyes.some(([ex,ey,ew,eh])=>x>=ex&&x<ex+ew&&y>=ey&&y<ey+eh);
+const isEye=(x,y)=>FIGURE.eyes.some(([ex,ey,ew,eh])=>x+off>=ex&&x+off<ex+ew&&y>=ey&&y<ey+eh);
 for(let y=0;y<h;y++)for(let x=0;x<half;x++){const i=(y*half+x)*4;if(!d[i+3])continue;
 if(isEye(x,y)&&d[i]>200&&d[i+1]>120){d[i]=255;d[i+1]=205;d[i+2]=110;glow.push([x,y]);continue;}
 d[i]=d[i]*.36+6;d[i+1]=d[i+1]*.36+8;d[i+2]=d[i+2]*.42+16;}
