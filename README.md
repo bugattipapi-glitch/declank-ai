@@ -37,6 +37,8 @@ The sign uses a 78 × 236 pixel master with three aligned lighting states. The h
 
 ## Positioning
 
-The page leads with AI slop as the hook, then widens to AI adoption across the business ("a personal trainer for your AI"). The free offer has two entry points on one intake form: a Slop Check for content and an AI Checkup for how work gets done. On phones the hero copy comes first and the shop scene sits beneath it; before/after cards and workbench projects scroll sideways.
+The page leads with AI slop as the hook, then widens to AI adoption across the business ("a personal trainer for your AI"). The slop section combines the "any business" message, the Real-or-Robot quiz and a "Six signs of slop" board (pick a sign, see the slop and the declanked version).
+
+Hero scene: a man stands under a streetlight that flickers and sometimes stays off; when it's dark only his amber replicant eyes show. The Tucson cactus sign is fixed on the left side of the page throughout, showing through the section backgrounds.
 
 Placeholders to confirm before launch: the AI Game Plan price, the two-business-day reply time, and the `og:image` address (currently the vercel.app URL).
