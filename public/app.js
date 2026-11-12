@@ -32,13 +32,13 @@ const poly=(points,color)=>{ctx.fillStyle=color;ctx.beginPath();points.forEach((
 let seed=79;function rand(){seed=(seed*16807)%2147483647;return(seed-1)/2147483646;}
 const rain=Array.from({length:100},()=>({x:rand()*384,y:rand()*216,s:1+rand()*2}));
 function cactus(x,y,s,color){rect(x,y-15*s,2*s,15*s,color);rect(x-4*s,y-11*s,2*s,6*s,color);rect(x-4*s,y-7*s,6*s,2*s,color);rect(x+4*s,y-16*s,2*s,8*s,color);rect(x,y-10*s,6*s,2*s,color);}
-const STREETLIGHT={x:185,desktopY:72,mobileY:206,sourceWidth:99,sourceHeight:256,drawHeight:96,bulbX:67.47,bulbY:42.07,beamOffsetX:2.5};
+const STREETLIGHT={x:185,desktopY:72,mobileY:136,sourceWidth:99,sourceHeight:256,drawHeight:96,bulbX:67.47,bulbY:42.07,beamOffsetX:2.5};
 function streetlightLayout(mobile){
 const scale=STREETLIGHT.drawHeight/STREETLIGHT.sourceHeight;
 return{x:STREETLIGHT.x,y:mobile?STREETLIGHT.mobileY:STREETLIGHT.desktopY,w:STREETLIGHT.sourceWidth*scale,h:STREETLIGHT.drawHeight,bulbX:STREETLIGHT.x+STREETLIGHT.bulbX*scale,bulbY:(mobile?STREETLIGHT.mobileY:STREETLIGHT.desktopY)+STREETLIGHT.bulbY*scale};
 }
 function drawStreetLightBeam(mobile){
-const light=streetlightLayout(mobile),bulbX=light.bulbX+STREETLIGHT.beamOffsetX,bulbY=light.bulbY,groundY=mobile?296:164;
+const light=streetlightLayout(mobile),bulbX=light.bulbX+STREETLIGHT.beamOffsetX,bulbY=light.bulbY,groundY=mobile?226:164;
 // Transparent, hard-edged bands preserve the pixel-art look while the scene remains visible beneath them.
 poly([[bulbX-4,bulbY],[bulbX-34,groundY],[bulbX+70,groundY]],'rgba(255,184,92,.035)');
 poly([[bulbX-3,bulbY],[bulbX-23,groundY],[bulbX+53,groundY]],'rgba(255,196,112,.045)');
@@ -68,7 +68,7 @@ x2.putImageData(img,48,40);lampOff=k;}catch(e){lampOff=null;}
 }
 // The man under the lamp. Lit, he looks human. In the dark he dims and only the replicant's eyes stay bright.
 // The replicant pose sits 5px further right in the sprite sheet than the human pose; darkOffset lines the two up so he doesn't jump when the lamp flickers.
-const FIGURE={w:59,h:108,desktopY:100,mobileY:240,darkOffset:5,eyes:[[84,59,9,7],[108,59,9,7]]};
+const FIGURE={w:59,h:108,desktopY:100,mobileY:170,darkOffset:5,eyes:[[84,59,9,7],[108,59,9,7]]};
 let figureLit=null,figureDark=null;
 function buildFigures(){
 const half=sprite.naturalWidth/2,h=sprite.naturalHeight;
@@ -102,7 +102,7 @@ if(shift>0)c.style.transform='translateX('+shift+'px)';
 function scene(){
 ctx.setTransform(2,0,0,2,0,0);
 const mobile=mobileScene.matches;
-rect(0,0,384,mobile?320:216,'#090d18');
+rect(0,0,384,mobile?250:216,'#090d18');
 // Ordered, square-pixel haze rather than smoothed artwork.
 for(let y=8;y<121;y++){let band=y<38?'#151b2a':y<58?'#262331':y<78?'#453033':y<96?'#694037':'#8d4b35';for(let x=0;x<384;x+=2){if((x+y)%4===0||y>65)rect(x,y,2,1,band);}}
 poly([[0,108],[23,100],[32,102],[43,90],[52,94],[64,80],[73,83],[85,71],[94,78],[106,65],[116,70],[124,62],[135,76],[150,66],[160,74],[172,73],[185,88],[205,82],[226,96],[246,90],[274,102],[305,91],[333,102],[361,94],[384,107],[384,146],[0,146]],'#1d2230');
@@ -111,10 +111,10 @@ rect(11,115,62,45,'#1e242b');rect(13,111,58,5,'#393339');rect(19,126,12,17,'#0c1
 rect(92,119,36,41,'#222b33');rect(89,115,42,5,'#404047');rect(99,130,20,10,'#101826');rect(101,132,16,2,'#2d6168');
 cactus(82,157,1.3,'#0c1720');cactus(168,157,1.4,'#0c1720');cactus(370,160,1.8,'#0a121b');
 // Pueblo Revival repair shop with a deep doorway, vigas and worn adobe stucco.
-if(storefront.complete&&storefront.naturalWidth){ctx.imageSmoothingEnabled=false;ctx.drawImage(storefront,211,mobile?185:51,158,115);}
+if(storefront.complete&&storefront.naturalWidth){ctx.imageSmoothingEnabled=false;ctx.drawImage(storefront,211,mobile?115:51,158,115);}
 // Wet pavement, scattered neon reflections and curb stones.
 // On phones the street sits lower (under the shop), so the pavement, curb and reflections move down with it.
-ctx.save();if(mobile)ctx.translate(0,134);
+ctx.save();if(mobile)ctx.translate(0,64);
 rect(0,160,384,56,'#101825');rect(0,160,384,3,'#38434c');rect(209,163,150,3,'#59606a');rect(213,166,143,2,'#1a2734');
 seed=615;for(let i=0;i<145;i++){let x=rand()*384,y=166+rand()*50,w=1+Math.floor(rand()*13);let col=x>245&&x<320?'#614335':x>322&&x<359?'#244d5b':'#263040';if(i%3===0)col='#152032';rect(x,y,w,1,col);}
 for(let i=0;i<10;i++){rect(265-i,169+i*3,35+i*2,1,i%2?'#8b5a3c':'#3b3432');rect(333-i*.4,173+i*3,14+i,1,i%2?'#2f7177':'#24444f');}rect(189,172,12,1,'#b17c44');rect(182,181,25,1,'#825d3a');rect(177,193,32,1,'#4e4234');
@@ -124,7 +124,7 @@ drawStreetLight(mobile);
 drawFigure(mobile);
 if(lampOn)drawStreetLightBeam(mobile);
 // Pixel rain: low contrast and no flashes.
-rain.forEach((r,i)=>{let y=(r.y+(moving?clock*r.s/120:0))%216;rect(r.x,y,1,i%3===0?4:2,i%4===0?'#63778466':'#41566755');});
+rain.forEach((r,i)=>{let y=(r.y+(moving?clock*r.s/120:0))%(mobile?250:216);rect(r.x,y,1,i%3===0?4:2,i%4===0?'#63778466':'#41566755');});
 }
 function draw(){scene();}
 function tick(t){frame=requestAnimationFrame(tick);if(document.hidden||!visible)return;if(t-clock<95)return;clock=t;scene();}
@@ -135,7 +135,7 @@ new IntersectionObserver(entries=>{if(entries[0].isIntersecting)$('#mobile-cta')
 const neonSign=$('#tucson-neon'),neonCanvas=$('#neon-sign'),neonContext=neonCanvas.getContext('2d');
 neonContext.imageSmoothingEnabled=false;
 function drawPersistentCactus(){const image=cactusFrames[cactusState];if(!image.complete||!image.naturalWidth)return;neonContext.clearRect(0,0,78,236);neonContext.drawImage(image,0,0,78,236);}
-function layout(){c.height=mobileScene.matches?640:432;ctx.imageSmoothingEnabled=false;layoutScene();scene();}
+function layout(){c.height=mobileScene.matches?500:432;ctx.imageSmoothingEnabled=false;layoutScene();scene();}
 window.addEventListener('resize',layout);layout();if(document.fonts)document.fonts.ready.then(layout);
 let neonTimer,neonFlashTimer;
 function setCactusState(state){cactusState=state;drawPersistentCactus();}

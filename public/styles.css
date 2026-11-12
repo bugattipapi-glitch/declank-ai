@@ -30,7 +30,7 @@
 @media(max-width:767px){.brand-name{font-size:20px;width:145px;min-width:0;letter-spacing:1px}.brand-name span{font-size:19px;letter-spacing:6px}.wordmark{gap:8px}.tucson-neon{filter:none}}
 
 
-@media(max-width:767px){.scene{height:640px}.hero{min-height:0}.hero .wrap{padding-top:610px}.hero:after{background:linear-gradient(0deg,#0a0d16 0%,#0a0d16 48%,transparent 66%)}.scene-label{top:552px}.tucson-neon{width:124.8px;height:377.6px;left:auto;right:-24px;bottom:70px}.tucson-neon.is-visible{opacity:.14}}
+@media(max-width:767px){.scene{height:500px}.hero{min-height:0}.hero .wrap{padding-top:610px}.hero:after{background:linear-gradient(0deg,#0a0d16 0%,#0a0d16 48%,transparent 66%)}.scene-label{top:552px}.tucson-neon{width:124.8px;height:377.6px;left:auto;right:-24px;bottom:70px}.tucson-neon.is-visible{opacity:.14}}
 
 /* Pixelify Sans merges "fi" into a single glyph that reads as "A" ("fix" showed as "Ax"). Turn ligatures off wherever it is used. */
 h1,h2,h3,.bay-number,.strategy-note strong,.experience b,.placeholder .play,.placeholder strong,.project-fallback b,.footer-grid strong{font-variant-ligatures:none;font-feature-settings:"liga" 0}
@@ -99,10 +99,10 @@ fieldset.choice{margin:0 0 26px}
 
 /* Phone hero: the headline and button come first, and the shop scene sits underneath them. */
 .hero{display:block}
-.hero .wrap{padding-top:30px;padding-bottom:640px}
+.hero .wrap{padding-top:30px;padding-bottom:500px}
 .hero .wrap.hero-bottom{padding-top:0;padding-bottom:0}
 .scene{top:auto;bottom:0}
-.hero:after{background:linear-gradient(180deg,#0a0d16 0,#0a0d16 calc(100% - 640px),transparent calc(100% - 560px))}
+.hero:after{background:linear-gradient(180deg,#0a0d16 0,#0a0d16 calc(100% - 500px),transparent calc(100% - 420px))}
 .scene-label{top:auto;bottom:58px}
 }
 @media(max-width:767px){
