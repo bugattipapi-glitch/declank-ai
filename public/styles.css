@@ -43,14 +43,7 @@ h1,h2,h3,.bay-number,.strategy-note strong,.experience b,.placeholder .play,.pla
 #how,#rules,footer{background:var(--night)}
 .section>.wrap,.signal-line .wrap,footer .wrap,.final-cta>:not(.btn){background:inherit}
 
-/* ---- Broader positioning: any-business section, before/after, Game Plan, sample scorecard, three-up workbench ---- */
-.plan{display:grid;grid-template-columns:auto 1fr auto;gap:34px;align-items:center;border:1px solid #a76838;background:#1b1716;padding:24px 28px;margin-bottom:22px}
-.plan .mono{color:var(--orange);font-size:18px;display:block;margin-bottom:6px}
-.plan h3{font-size:30px;margin:0;white-space:nowrap}
-.plan p{font-size:15px;color:#c9c4bd;margin:0;max-width:540px}
-.plan-price{text-align:right}
-.plan-price .price{display:block;font-size:17px;font-weight:500;margin-bottom:8px}
-.plan-price .text-link{font-size:15px;white-space:nowrap}
+/* Workbench and sample scorecard */
 
 .projects.three{grid-template-columns:repeat(3,1fr);gap:22px}
 .projects.three .project-frame{height:215px}
@@ -80,15 +73,10 @@ fieldset.choice{margin:0 0 26px}
 .optional{font-weight:400;color:var(--muted)}
 
 @media(max-width:1000px){
-.plan{grid-template-columns:1fr auto;gap:16px 24px}
-.plan p{grid-column:1/-1;grid-row:2;max-width:none}
 .projects.three{grid-template-columns:1fr 1fr;gap:16px}
 .sample{gap:40px}
 }
 @media(max-width:767px){
-.plan{display:block;padding:20px}
-.plan h3{white-space:normal;margin-bottom:12px}
-.plan-price{text-align:left;margin-top:16px}
 .projects.three{grid-template-columns:1fr;gap:24px}
 .projects.three .project-frame{height:230px}
 .projects.three .project-caption h3{font-size:26px}
@@ -192,3 +180,72 @@ fieldset.choice{margin:0 0 26px}
 .tucson-neon,.tucson-neon.is-visible{left:-30px;right:auto;bottom:70px;opacity:.16}
 }
 
+
+/* Workflow example and the two intake paths */
+.final-cta .actions {
+  justify-content: center;
+}
+
+.workflow-example {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.workflow-example .step {
+  padding: 23px 25px 0;
+  background: var(--panel);
+}
+
+.workflow-example .step:last-child {
+  border-top-color: var(--cyan);
+}
+
+.workflow-example .step:last-child .mono {
+  color: var(--cyan);
+}
+
+.workflow-example .step:before {
+  left: 25px;
+}
+
+.workflow-measure {
+  margin: 22px 0 0;
+  color: var(--muted);
+  font-size: 16px;
+}
+
+.workflow-measure strong {
+  color: var(--ink);
+}
+
+.success h3 {
+  margin-top: 24px;
+}
+
+.form-shell .preview-note {
+  color: var(--muted);
+}
+
+@media (max-width: 767px) {
+  .workflow-example {
+    grid-template-columns: 1fr;
+  }
+
+  .workflow-example .step {
+    padding-bottom: 20px;
+  }
+
+  .mobile-cta .actions {
+    flex-wrap: nowrap;
+    gap: 10px;
+  }
+
+  .mobile-cta .btn {
+    flex: 1;
+    width: auto;
+    gap: 5px;
+    padding-inline: 6px;
+    font-size: 14px;
+  }
+}

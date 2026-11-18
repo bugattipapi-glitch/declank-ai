@@ -8,11 +8,57 @@ $('#scanlines-toggle').addEventListener('click',()=>{const on=document.body.clas
 const rounds=[{q:'“Nestled in the heart of the Sonoran Desert, our family-owned café invites you to embark on a culinary journey.”',a:'robot',why:'It could describe almost any café. It tells you nothing about this one.',fix:'“We’ve made tortillas by hand since 1998. Come early: the green corn tamales sell out by noon.”'},{q:'“Thanks, Dana. Glad the AC was blowing cold again before your in-laws landed. Tell Marcus we said hi.”',a:'real',why:'Names. A real situation. A little warmth. This sounds like someone who remembers the customer.',fix:'Specific details do more work than “Thank you for your valuable feedback.”'},{q:'“In today’s fast-paced world, maintaining your HVAC system is a game-changer for comfort and efficiency.”',a:'robot',why:'A lot of words to tell a Tucson homeowner that air conditioning matters.',fix:'“If your AC runs all day in July and the house still sits at 84, it’s time to get it checked.”'}];
 let round=0,score=0;
 function renderRound(){ $('#round-label').textContent='ROUND 0'+(round+1)+' / 03';$('#game-quote').textContent=rounds[round].q;$('#game-reveal').hidden=true;$('#game-buttons').hidden=false;document.querySelectorAll('[data-answer]').forEach(b=>b.disabled=false); }
-document.querySelectorAll('[data-answer]').forEach(b=>b.addEventListener('click',()=>{let r=rounds[round],correct=b.dataset.answer===r.a;if(correct)score++;document.querySelectorAll('[data-answer]').forEach(x=>x.disabled=true);let out=$('#game-reveal');out.hidden=false;out.replaceChildren();let strong=document.createElement('strong');strong.textContent=correct?'Spotted it.':'Worth another look.';let p=document.createElement('p');p.textContent=r.why;let fix=document.createElement('p');fix.textContent=r.fix;let next=document.createElement('button');next.className='btn small secondary';next.textContent=round<2?'Next example →':'See the result →';next.addEventListener('click',()=>{round++;if(round<3){renderRound();}else{$('#round-label').textContent='DIAGNOSTIC COMPLETE';$('#game-quote').textContent=score+' of 3. You already know what sounds off.';$('#game-buttons').hidden=true;out.replaceChildren();let p=document.createElement('p');p.textContent='The useful question isn’t who wrote it. It’s whether this sounds like a business you’d trust.';let a=document.createElement('a');a.className='btn small';a.href='#slop-check';a.textContent='Check my business ↗';let replay=document.createElement('button');replay.className='btn small secondary';replay.style.marginLeft='12px';replay.textContent='Play again';replay.addEventListener('click',()=>{round=0;score=0;renderRound();});out.append(p,a,replay);}});out.append(strong,p,fix,next);}));
+document.querySelectorAll('[data-answer]').forEach(b=>b.addEventListener('click',()=>{let r=rounds[round],correct=b.dataset.answer===r.a;if(correct)score++;document.querySelectorAll('[data-answer]').forEach(x=>x.disabled=true);let out=$('#game-reveal');out.hidden=false;out.replaceChildren();let strong=document.createElement('strong');strong.textContent=correct?'Spotted it.':'Worth another look.';let p=document.createElement('p');p.textContent=r.why;let fix=document.createElement('p');fix.textContent=r.fix;let next=document.createElement('button');next.className='btn small secondary';next.textContent=round<2?'Next example →':'See the result →';next.addEventListener('click',()=>{round++;if(round<3){renderRound();}else{$('#round-label').textContent='DIAGNOSTIC COMPLETE';$('#game-quote').textContent=score+' of 3. You already know what sounds off.';$('#game-buttons').hidden=true;out.replaceChildren();let p=document.createElement('p');p.textContent='The useful question isn’t who wrote it. It’s whether this sounds like a business you’d trust.';let a=document.createElement('a');a.className='btn small';a.href='#slop-check';a.dataset.check='Slop Check';a.textContent='Check my content ↗';let replay=document.createElement('button');replay.className='btn small secondary';replay.style.marginLeft='12px';replay.textContent='Play again';replay.addEventListener('click',()=>{round=0;score=0;renderRound();});out.append(p,a,replay);}});out.append(strong,p,fix,next);}));
 const signTabs=[...document.querySelectorAll('.sign-tab')];
 function showSign(tab,focus){signTabs.forEach(t=>{const on=t===tab;t.setAttribute('aria-selected',String(on));t.tabIndex=on?0:-1;document.getElementById(t.getAttribute('aria-controls')).hidden=!on;});if(focus)tab.focus();}
 signTabs.forEach((tab,i)=>{tab.addEventListener('click',()=>showSign(tab));tab.addEventListener('keydown',e=>{const k={ArrowDown:1,ArrowRight:1,ArrowUp:-1,ArrowLeft:-1}[e.key];let next=null;if(k)next=signTabs[(i+k+signTabs.length)%signTabs.length];else if(e.key==='Home')next=signTabs[0];else if(e.key==='End')next=signTabs[signTabs.length-1];if(next){e.preventDefault();showSign(next,true);}});});
-$('#intake-form').addEventListener('submit',e=>{e.preventDefault();$('#intake-form').hidden=true;$('#success').hidden=false;});$('#reset-form').addEventListener('click',()=>{$('#success').hidden=true;$('#intake-form').hidden=false;$('#name').focus();});
+const intakeForm = $('#intake-form');
+const checkOptions = Array.from(intakeForm.querySelectorAll('input[name="check"]'));
+const concernOptions = Array.from(intakeForm.querySelectorAll('input[name="concerns"]'));
+let suggestedConcern = null;
+
+intakeForm.addEventListener('change', event => {
+  if (event.target === suggestedConcern) suggestedConcern = null;
+});
+
+document.addEventListener('click', event => {
+  const link = event.target.closest('a[data-check]');
+  if (!link || event.defaultPrevented || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+  const check = checkOptions.find(option => option.value === link.dataset.check);
+  const concern = concernOptions.find(option => option.value === link.dataset.concern);
+  check.checked = true;
+  if (suggestedConcern && suggestedConcern !== concern) {
+    suggestedConcern.checked = false;
+    suggestedConcern = null;
+  }
+  if (concern && !concern.checked) {
+    concern.checked = true;
+    suggestedConcern = concern;
+  }
+
+  $('#success').hidden = true;
+  intakeForm.hidden = false;
+  requestAnimationFrame(() => check.focus({preventScroll: true}));
+});
+
+intakeForm.addEventListener('submit', event => {
+  event.preventDefault();
+  const check = checkOptions.find(option => option.checked);
+  const receiptHeading = $('#receipt-heading');
+  receiptHeading.textContent = check.value === 'Not sure' ? 'Free check preview' : check.value + ' request preview';
+  intakeForm.hidden = true;
+  $('#success').hidden = false;
+  receiptHeading.focus();
+});
+
+$('#reset-form').addEventListener('click', () => {
+  $('#success').hidden = true;
+  intakeForm.hidden = false;
+  $('#name').focus();
+});
+
+$('#preview-submit').disabled = false;
 const c=$('#scene'),ctx=c.getContext('2d');ctx.imageSmoothingEnabled=false;
 let reduced=matchMedia('(prefers-reduced-motion: reduce)').matches,moving=!reduced,visible=true,lampOn=true,frame=0,clock=0;
 
@@ -158,6 +204,3 @@ scheduleNeon();scheduleLamp();
 
 scene();if(!reduced)frame=requestAnimationFrame(tick);
 })();
-
-
-
