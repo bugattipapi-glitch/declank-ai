@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Compare versions | Replicant Repair</title>
+<style>
+* { box-sizing: border-box; }
+body { margin: 0; background: #0a0d16; color: #e9e6df; font: 16px/1.4 system-ui, sans-serif; }
+main { display: grid; grid-template-rows: auto 1fr; height: 100vh; height: 100dvh; }
+header, .pane-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .6rem; padding: .65rem 1rem; }
+header { border-bottom: 1px solid #394656; }
+h1, h2 { font-size: 1rem; margin: 0; }
+h2 { font-size: .9rem; }
+label { font-size: .9rem; }
+select { font: inherit; color: inherit; background: #162130; border: 1px solid #718093; padding: .25rem .4rem; }
+a { color: #65e2e8; font-size: .85rem; }
+.panes { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); min-height: 0; }
+.pane { display: grid; grid-template-rows: auto 1fr; min-height: 0; min-width: 0; }
+.pane + .pane { border-left: 2px solid #536272; }
+.pane-heading { background: #111925; }
+.pane-heading h2 { color: #ded7c7; }
+.pane + .pane h2 { color: #ffac66; }
+.frame-window { position: relative; overflow: hidden; }
+iframe { position: absolute; inset: 0; border: 0; transform-origin: top left; width: 100%; height: 100%; }
+.switcher { display: none; }
+@media (max-width: 740px) {
+  .panes { display: block; }
+  .pane { height: 100%; }
+  .pane + .pane { border: 0; }
+  main[data-view="revised"] .original, main[data-view="original"] .revised { display: none; }
+  .switcher { display: inline; }
+}
+</style>
+</head>
+<body>
+<main data-view="revised">
+  <header>
+    <h1>Replicant Repair · Compare versions</h1>
+    <label class="switcher">Version <select id="view"><option value="revised">Proposed</option><option value="original">Original</option></select></label>
+    <label>Jump both to <select id="section"><option value="top">First impression</option><option value="examples">Examples</option><option value="repairs">Offers</option><option value="about">Jason</option><option value="how">Handover</option><option value="slop-check">Intake form</option></select></label>
+  </header>
+  <div class="panes">
+    <section class="pane original"><div class="pane-heading"><h2>Original · Nov 18 snapshot</h2><a href="https://www.declank.ai/" target="_blank" rel="noopener">Open live site ↗</a></div><div class="frame-window"><iframe src="/original.html" title="Original homepage"></iframe></div></section>
+    <section class="pane revised"><div class="pane-heading"><h2>Proposed · Workflow repair</h2><a href="/" target="_blank" rel="noopener">Open preview ↗</a></div><div class="frame-window"><iframe src="/" title="Proposed homepage"></iframe></div></section>
+  </div>
+</main>
+<script>
+const main = document.querySelector('main');
+const frames = document.querySelectorAll('iframe');
+const section = document.querySelector('#section');
+
+function fitFrame(host) {
+  if (!host.clientWidth || !host.clientHeight) return;
+  const desktop = window.matchMedia('(min-width: 741px)').matches;
+  const scale = desktop ? Math.min(1, host.clientWidth / 1120) : 1;
+  const frame = host.querySelector('iframe');
+  frame.style.width = host.clientWidth / scale + 'px';
+  frame.style.height = host.clientHeight / scale + 'px';
+  frame.style.transform = 'scale(' + scale + ')';
+}
+const observer = new ResizeObserver(entries => entries.forEach(entry => fitFrame(entry.target)));
+document.querySelectorAll('.frame-window').forEach(host => observer.observe(host));
+
+function jump(frame) {
+  let id = section.value;
+  if (id === 'examples' && frame.closest('.original')) id = 'slop';
+  if (id === 'top') frame.contentWindow.scrollTo({top: 0, behavior: 'instant'});
+  else frame.contentDocument.getElementById(id)?.scrollIntoView({behavior: 'instant'});
+}
+section.addEventListener('change', () => frames.forEach(jump));
+document.querySelector('#view').addEventListener('change', event => {
+  main.dataset.view = event.target.value;
+  const pane = document.querySelector('.pane.' + event.target.value);
+  fitFrame(pane.querySelector('.frame-window'));
+  jump(pane.querySelector('iframe'));
+});
+frames.forEach(frame => frame.addEventListener('load', () => jump(frame)));
+</script>
+</body>
+</html>
