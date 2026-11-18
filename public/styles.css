@@ -182,6 +182,20 @@ fieldset.choice{margin:0 0 26px}
 
 
 /* Workflow example and the two intake paths */
+@media (min-width: 768px) {
+  .hero .wrap {
+    padding-top: 64px;
+  }
+
+  .hero-copy {
+    max-width: min(660px, 68vw);
+  }
+
+  .hero h1 {
+    font-size: clamp(48px, 4.7vw, 66px);
+  }
+}
+
 .final-cta .actions {
   justify-content: center;
 }
@@ -228,6 +242,10 @@ fieldset.choice{margin:0 0 26px}
 }
 
 @media (max-width: 767px) {
+  .hero h1 {
+    font-size: clamp(32px, 9vw, 52px);
+  }
+
   .workflow-example {
     grid-template-columns: 1fr;
   }
