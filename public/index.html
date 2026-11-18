@@ -85,15 +85,16 @@
 <section class="section intake" id="slop-check"><div class="wrap intake-grid">
 <div><span class="eyebrow">REPAIR-SHOP INTAKE</span><h2>Let's look<br>under the hood</h2><p>Show us a message that sounds off or a task that keeps landing back on your desk. A link or a short description is plenty.</p><div class="ticket"><div class="mono">REPLICANT REPAIR · TUCSON</div><strong>FREE CHECK</strong><ul><li>Slop Check or AI Checkup</li><li>One observation and a suggested fix</li><li>A price for doing the work together</li><li>A reply within two business days</li></ul><small>TOTAL DUE: $0.00</small><small>KEEP THIS COPY. LOSE THE SLOP.</small></div></div>
 <div class="form-shell"><div class="terminal-top"><span>NEW REPAIR TICKET</span><span>INTAKE · 01</span></div>
-<form id="intake-form">
-<p class="preview-note">Preview form · Try it with sample details. Nothing is sent.</p>
+<form id="intake-form" action="https://formsubmit.co/jason@declank.ai" method="post">
+<input type="hidden" name="_subject" value="Free AI Checkup request from declank.ai">
+<input type="hidden" name="_template" value="table">
 <fieldset class="choice"><legend>What should we look at?</legend><div class="checks"><label><input type="radio" name="check" value="Slop Check">Our content (Slop Check)</label><label><input type="radio" name="check" value="AI Checkup">How we work (AI Checkup)</label><label><input type="radio" name="check" value="Not sure" checked>Not sure yet</label></div></fieldset>
 <div class="form-grid"><div class="field"><label for="name">Your name</label><input id="name" name="name" autocomplete="name" required placeholder="First and last"></div><div class="field"><label for="email">Email</label><input id="email" name="email" type="email" required autocomplete="email" placeholder="you@yourbusiness.com"></div><div class="field"><label for="business">Business name <span class="optional">(optional)</span></label><input id="business" name="business" autocomplete="organization" placeholder="The name on the sign"></div><div class="field"><label for="website">Social page or website <span class="optional">(optional)</span></label><input id="website" name="website" placeholder="Where should we look?"></div></div>
-<fieldset><legend>Anything specific? <span class="optional">(optional)</span></legend><div class="checks"><label><input type="checkbox" name="concerns" value="Social posts">Social posts</label><label><input type="checkbox" name="concerns" value="Review replies">Review replies</label><label><input type="checkbox" name="concerns" value="Website">Website</label><label><input type="checkbox" name="concerns" value="Team training">Team training</label><label><input type="checkbox" name="concerns" value="Automations">Automations</label><label><input type="checkbox" name="concerns" value="Robot Rehab dates">Robot Rehab dates</label></div></fieldset>
+<fieldset><legend>Anything specific? <span class="optional">(optional)</span></legend><div class="checks"><label><input type="checkbox" name="concerns[]" value="Social posts">Social posts</label><label><input type="checkbox" name="concerns[]" value="Review replies">Review replies</label><label><input type="checkbox" name="concerns[]" value="Website">Website</label><label><input type="checkbox" name="concerns[]" value="Team training">Team training</label><label><input type="checkbox" name="concerns[]" value="Automations">Automations</label><label><input type="checkbox" name="concerns[]" value="Robot Rehab dates">Robot Rehab dates</label></div></fieldset>
 <label for="note">What’s been bugging you? <span class="optional">(optional)</span></label><textarea id="note" name="note" rows="3" placeholder="The task everyone avoids, the inbox nobody answers, the posts that sound wrong."></textarea>
 <button class="btn" type="submit">Free AI Checkup <span aria-hidden="true">↗</span></button>
 </form>
-<div class="success" id="success" role="status" hidden><span class="mono">PREVIEW TICKET #0427</span><h3 style="margin-top:24px">That's the intake experience</h3><p>On the live site, this is where the owner would see a receipt and the confirmed response time.</p><p>This is a mockup. No request was sent.</p><button id="reset-form">Back to the form</button></div>
+<p class="preview-note">Prefer email? <a href="mailto:jason@declank.ai">jason@declank.ai</a></p>
 </div>
 </div></section>
 
@@ -111,7 +112,7 @@
 </main>
 <footer><div class="wrap footer-grid"><div><strong>Human-finished in Tucson.</strong><span>© 2026 Replicant Repair · declank.ai</span></div><div class="footer-controls"><span>BASED IN TUCSON, ARIZONA</span><button id="scanlines-toggle" aria-pressed="true">SCANLINES: ON</button><button id="motion-toggle" aria-pressed="true">RAIN: ON</button></div></div></footer>
 <div class="mobile-cta" id="mobile-cta"><a class="btn" href="#slop-check">Free AI Checkup ↗</a></div>
-<script src="/app.js" defer></script>
+<script src="/app.js?v=live-intake" defer></script>
 </body>
 </html>
 

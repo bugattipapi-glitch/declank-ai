@@ -12,7 +12,6 @@ document.querySelectorAll('[data-answer]').forEach(b=>b.addEventListener('click'
 const signTabs=[...document.querySelectorAll('.sign-tab')];
 function showSign(tab,focus){signTabs.forEach(t=>{const on=t===tab;t.setAttribute('aria-selected',String(on));t.tabIndex=on?0:-1;document.getElementById(t.getAttribute('aria-controls')).hidden=!on;});if(focus)tab.focus();}
 signTabs.forEach((tab,i)=>{tab.addEventListener('click',()=>showSign(tab));tab.addEventListener('keydown',e=>{const k={ArrowDown:1,ArrowRight:1,ArrowUp:-1,ArrowLeft:-1}[e.key];let next=null;if(k)next=signTabs[(i+k+signTabs.length)%signTabs.length];else if(e.key==='Home')next=signTabs[0];else if(e.key==='End')next=signTabs[signTabs.length-1];if(next){e.preventDefault();showSign(next,true);}});});
-$('#intake-form').addEventListener('submit',e=>{e.preventDefault();$('#intake-form').hidden=true;$('#success').hidden=false;});$('#reset-form').addEventListener('click',()=>{$('#success').hidden=true;$('#intake-form').hidden=false;$('#name').focus();});
 const c=$('#scene'),ctx=c.getContext('2d');ctx.imageSmoothingEnabled=false;
 let reduced=matchMedia('(prefers-reduced-motion: reduce)').matches,moving=!reduced,visible=true,lampOn=true,frame=0,clock=0;
 

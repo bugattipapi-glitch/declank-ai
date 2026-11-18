@@ -16,7 +16,7 @@ Open http://127.0.0.1:4173.
 
 - `public/index.html`: page copy and accessible markup
 - `public/styles.css`: responsive layout and visual design
-- `public/app.js`: pixel scene, sign behavior, copy diagnostic and demo intake
+- `public/app.js`: pixel scene, sign behavior, copy diagnostic and page interactions
 - `public/assets/`: images, gameplay captures, the wordmark font and `share.png` (the link-preview image)
 - `public/favicon.svg`: browser tab icon
 - `vercel.json`: static deployment configuration, with `public` as the output directory
@@ -25,7 +25,7 @@ There is no package installation or build step. Import this repository into Verc
 
 ## Preview status
 
-The intake form is a demo. It sends and stores nothing. A submission destination must be connected before launch. Search indexing is disabled in the preview. The custom domain is not connected by this project configuration.
+The live intake form posts to FormSubmit for delivery to jason@declank.ai. The destination inbox must confirm FormSubmit’s activation email once. The email field sets the reply address. Search indexing is disabled in the preview. The custom domain is not connected by this project configuration.
 
 ## Asset notes
 
