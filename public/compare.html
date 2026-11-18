@@ -39,7 +39,7 @@ iframe { position: absolute; inset: 0; border: 0; transform-origin: top left; wi
   <header>
     <h1>Replicant Repair · Compare versions</h1>
     <label class="switcher">Version <select id="view"><option value="revised">Proposed</option><option value="original">Original</option></select></label>
-    <label>Jump both to <select id="section"><option value="top">First impression</option><option value="examples">Examples</option><option value="repairs">Offers</option><option value="about">Jason</option><option value="how">Handover</option><option value="slop-check">Intake form</option></select></label>
+    <label>Jump both to <select id="section"><option value="top">First impression</option><option value="slop">Six Signs of Slop</option><option value="how">The Process</option><option value="repairs">Offers</option><option value="about">Jason</option><option value="slop-check">Intake form</option></select></label>
   </header>
   <div class="panes">
     <section class="pane original"><div class="pane-heading"><h2>Original · Nov 18 snapshot</h2><a href="https://www.declank.ai/" target="_blank" rel="noopener">Open live site ↗</a></div><div class="frame-window"><iframe src="/original.html" title="Original homepage"></iframe></div></section>
@@ -64,8 +64,7 @@ const observer = new ResizeObserver(entries => entries.forEach(entry => fitFrame
 document.querySelectorAll('.frame-window').forEach(host => observer.observe(host));
 
 function jump(frame) {
-  let id = section.value;
-  if (id === 'examples' && frame.closest('.original')) id = 'slop';
+  const id = section.value;
   if (id === 'top') frame.contentWindow.scrollTo({top: 0, behavior: 'instant'});
   else frame.contentDocument.getElementById(id)?.scrollIntoView({behavior: 'instant'});
 }
