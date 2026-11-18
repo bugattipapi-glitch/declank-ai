@@ -23,9 +23,9 @@
   display: grid;
   grid-template-columns: minmax(12rem, 5fr) minmax(0, 7fr);
   gap: 2rem;
-  margin-top: clamp(2rem, 5vw, 4rem);
+  margin-bottom: clamp(2rem, 5vw, 4rem);
 }
-.slop-reading h3 { font-size: clamp(30px, 3.3vw, 46px); margin-bottom: 0; }
+.slop-reading h2 { font-size: clamp(30px, 3.3vw, 46px); margin-bottom: 0; }
 .slop-reading p { max-width: 60ch; }
 .slop-reading p:last-child { margin-bottom: 0; }
 @media (max-width: 767px) {
