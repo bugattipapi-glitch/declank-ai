@@ -1,0 +1,34 @@
+.hero h1 {
+  font-size: clamp(38px, 4.05vw, 58px);
+  text-wrap: balance;
+}
+.hero .check-subtitle {
+  margin: 14px 0 0;
+  max-width: 52ch;
+  color: #c3cad4;
+  font-size: 15px;
+  line-height: 1.45;
+}
+.diagnostic-heading { margin-bottom: 26px; }
+.diagnostic-heading h2 { margin-bottom: 10px; }
+.diagnostic-heading p { color: var(--muted); margin: 0; }
+.jason-quote { margin-top: 1.5rem; font-style: italic; }
+.preview-note { font-size: 14px; color: var(--muted); }
+@media (max-width: 767px) {
+  .hero h1 { font-size: clamp(30px, 8.5vw, 42px); }
+  .hero .actions .btn { white-space: normal; }
+}
+
+.slop-reading {
+  display: grid;
+  grid-template-columns: minmax(12rem, 5fr) minmax(0, 7fr);
+  gap: 2rem;
+  margin-top: clamp(2rem, 5vw, 4rem);
+}
+.slop-reading h3 { font-size: clamp(30px, 3.3vw, 46px); margin-bottom: 0; }
+.slop-reading p { max-width: 60ch; }
+.slop-reading p:last-child { margin-bottom: 0; }
+@media (max-width: 767px) {
+  .slop-reading { grid-template-columns: 1fr; gap: 1rem; }
+  .signals .location { display: inline; }
+}
